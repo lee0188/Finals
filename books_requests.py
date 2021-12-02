@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-keyword = '維尼'
+keyword = ''
 re = requests.get(f'https://search.books.com.tw/search/query/key/{keyword}/cat/all')
 
 soup = BeautifulSoup(re.text, 'html.parser')
