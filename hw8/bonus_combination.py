@@ -27,6 +27,7 @@
 
 
 ### Reference solution
+# different
 # 處理輸入
 nums = input().split(',')
 
