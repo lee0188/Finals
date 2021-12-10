@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+# books_name
 keyword = 'Django'
 re = requests.get(f'https://search.books.com.tw/search/query/key/{keyword}/cat/all')
 
