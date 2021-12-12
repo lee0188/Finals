@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>表單傳送範例</title>
+</head>
+<body>
+<form action='/post/' method='POST' name='form1'>
+    {% csrf_token %}
+    <div>請輸入姓名 <input type='text' name='inputvalue'/>
+        <input type='submit' value='送出資料' />
+    </div>
+    <div>接收到的資料{{mess}}</div>
+
+</form>
+</body>
+</html>
