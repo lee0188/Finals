@@ -1,8 +1,108 @@
 <!DOCTYPE html>
 <html>
 
-<head><title>查書平台_搜尋結果</title></head>
+<head>
+<title>查書平台_搜尋結果</title>
+
+
+<style>
+.hide{
+    display: none;
+}
+.click {
+  background-color:SteelBlue;
+  color: white;
+  font-size: 15px;
+}
+
+</style>
+
+<script>
+function menu(){
+    var x = document.getElementById("berkelyBS");
+    var y = document.getElementById("TC_lib");
+    var z = document.getElementById("NT_lib");
+    var btn1 = document.getElementById("btn1")
+    var btn2 = document.getElementById("btn2")
+    var btn3 = document.getElementById("btn3")
+    if(x.style.display === 'none'){
+        x.style.display = "block";
+        y.style.display = 'none';
+        z.style.display = 'none'
+    }
+    else{
+        y.style.display = 'none';
+        z.style.display = 'none'
+    }
+
+    btn1.classList.add('click')
+    btn2.classList.remove('click')
+    btn3.classList.remove('click')
+}
+
+function menu2(){
+    var x = document.getElementById("berkelyBS");
+    var y = document.getElementById("TC_lib");
+    var z = document.getElementById("NT_lib");
+    var btn1 = document.getElementById("btn1")
+    var btn2 = document.getElementById("btn2")
+    var btn3 = document.getElementById("btn3")
+
+    y.classList.toggle("hide");
+    if(y.style.display === 'none'){
+        y.style.display = "block";
+        x.style.display = 'none';
+        z.style.display = 'none'
+    }
+    else{
+        x.style.display = 'none';
+        z.style.display = 'none'
+    }
+
+    btn1.classList.remove('click')
+    btn2.classList.add('click')
+    btn3.classList.remove('click')
+
+}
+
+function menu3(){
+    var x = document.getElementById("berkelyBS");
+    var y = document.getElementById("TC_lib");
+    var z = document.getElementById("NT_lib"); 
+    var btn1 = document.getElementById("btn1")
+    var btn2 = document.getElementById("btn2")
+    var btn3 = document.getElementById("btn3")
+
+    z.classList.toggle("hide");  
+    if(z.style.display === 'none'){
+        z.style.display = "block";
+        x.style.display = 'none';
+        y.style.display = 'none';
+    }
+    else{
+        x.style.display = 'none';
+        y.style.display = 'none'
+    }
+
+    btn1.classList.remove('click')
+    btn2.classList.remove('click')
+    btn3.classList.add('click')
+}
+
+
+</script>
+</head>
+
 <body>
+
+<div>
+<button onclick="menu()" id="btn1" > 博客來</button>
+<button onclick="menu2()" id="btn2"> 北市圖書館</button>
+<button onclick="menu3()" id="btn3" > 新北圖書館</button>
+</div>
+
+
+<div id='berkelyBS'>
 {% for k,v in berkely_bs.items %}
 <h3>第{{forloop.counter}}本書</h3>
 <ul>
@@ -13,5 +113,14 @@
 {% empty %}
 <span>{{msg}}</span>
 {%endfor%}
+</div>
+
+<div id='TC_lib' class='hide'>
+台北市圖書館館藏
+</div>
+
+<div id='NT_lib' class='hide'>
+新北市圖書館館藏
+</div>
 </body>
 </html>

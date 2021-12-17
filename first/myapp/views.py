@@ -104,6 +104,7 @@ def Berkeley_output(request,value):
                 'data': data,
                 'img': img,
             }
+    berkely_bs = dict(list(berkely_bs.items())[:6]) #選前6本書即可
     response = render(request, "Berkeley_output.html", locals())
     utf8 = value.encode('utf-8')
     if 'searchword' in request.COOKIES:
@@ -120,7 +121,6 @@ def Berkeley_output(request,value):
 def Berkeley_post(request):
     if request.COOKIES != None:
         total = ''
-        print(request.COOKIES.items(),'!!!!')
         if 'searchword' in request.COOKIES:
             bytes_list = ast.literal_eval(request.COOKIES['searchword'])
             for byte in bytes_list:
