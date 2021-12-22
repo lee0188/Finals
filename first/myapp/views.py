@@ -25,6 +25,8 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+# if using mac need this
+# from webdriver_manager.chrome import ChromeDriverManager
 
 
 # Create your views here.
@@ -35,9 +37,11 @@ def Chrome():
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
+    # if using mac need this
+    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
     driver = webdriver.Chrome(options=chrome_options)
 
-# Chrome()
+Chrome()
 
 
 def browser(path):
