@@ -4,12 +4,14 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, response
 from selenium.webdriver.common import keys
 from myapp.models import student
-from myapp.form import PostForm
+from myapp.form import PostForm, RegisterForm, LoginForm
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.template.defaulttags import register
 from django.utils.encoding import smart_str
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
 
 
 import requests, random, time,sys, ast
@@ -35,7 +37,7 @@ def Chrome():
     chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
     driver = webdriver.Chrome(options=chrome_options)
 
-Chrome()
+# Chrome()
 
 
 def browser(path):
@@ -135,4 +137,35 @@ def Berkeley_post(request):
     else:
         pass
     return render(request,'Berkeley_post.html',locals())
+
+
+# 會員註冊
+def sign_up(request):
+    form = RegisterForm()
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/login')  #重新導向到登入畫面
+    context = {
+        'form': form
+    }
+    return render(request, 'register.html', context)
+
+
+#登入
+def sign_in(request):
+    form = LoginForm()
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')  #重新導向到首頁
+    context = {
+        'form': form
+    }
+    return render(request, 'login.html', context)
+
 

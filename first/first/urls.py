@@ -23,5 +23,7 @@ urlpatterns = [
     path('delete_cookie/<str:key>',views.delete_cookie),
     path('Berkeley_output/<str:value>',views.Berkeley_output),
     path('Berkeley_post/',views.Berkeley_post),
-
+    path('',views.Berkeley_post),
+    path('register/', views.sign_up, name='Register'),
+    path('login/', views.sign_in, name='Login'),
 ]
