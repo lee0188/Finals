@@ -37,6 +37,10 @@ def Chrome():
 
 Chrome()
 
+space = chr(32)+chr(10)+chr(9)+chr(13)+chr(160)+chr(5760)+chr(6158)+chr(8194)+chr(8195)+chr(8196)+chr(8197)+\
+chr(8198)+chr(8199)+chr(8200)+chr(8201)+chr(8202)+chr(8203)+chr(8204)+chr(8205)+\
+chr(8239)+chr(8287)+chr(8288)+chr(12288)+chr(65279)
+
 
 def browser(path):
     while True:
@@ -75,7 +79,7 @@ def Berkeley_output(request,value):
         except:
             pass
         else:
-            none_item=soup.find_all('p',string=f'抱歉，找不到您所查詢的 "{value}" 資料') #沒搜尋結果
+            none_item=soup.find_all('div',class_ = 'none clearfix') #沒搜尋結果
             search_results=soup.find_all('div',class_='search_results') #有搜尋結果
             if none_item!=[] or search_results!=[]:
                 if none_item != []:
@@ -129,9 +133,10 @@ def Berkeley_post(request):
         total = total.strip(', ')
 
     if request.method =='POST':
-        keyword = request.POST['keyword']
+        keyword = request.POST['keyword'].strip(space)
         print('關鍵字',keyword)
-        return redirect(f'/Berkeley_output/{keyword}')
+        if keyword !='':
+            return redirect(f'/Berkeley_output/{keyword}')
     else:
         pass
     return render(request,'Berkeley_post.html',locals())

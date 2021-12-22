@@ -2,6 +2,15 @@
 <html>
 <head>
 <title>查書平台_表單傳送</title>
+
+<style>
+.hide{
+    display: none;
+}
+</style>
+
+
+</head>
 <body>
 <form action="" method='POST' name='form1'>
     {% csrf_token %}
@@ -13,6 +22,39 @@
 <br>
 <div>搜尋紀錄 : {{total}}</div>
 
+<h1 id='preloader' class='hide'>搜尋中，請稍後...</h1>
+
+<script>    
+    var x = document.getElementById("preloader");
+        window.addEventListener("submit",function(){
+            x.classList.toggle("hide")
+    })
+</script>
+
+
+<script>
+    window.addEventListener('pageshow',function(){
+
+        // The last "domLoading" Time //
+        var currentDocumentTimestamp =
+        new Date(performance.timing.domLoading).getTime();
+        // Current Time //
+        var now = Date.now();
+        // Ten Seconds //
+        var tenSec = 10 * 1000;
+        // Plus Ten Seconds //
+        var plusTenSec = currentDocumentTimestamp + tenSec;
+        if (now > plusTenSec) {
+        location.reload();
+        } else {}
+        
+
+    })
+
+    
+</script>
+    
+
+
 </body>
-</head>
 </html>
