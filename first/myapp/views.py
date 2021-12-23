@@ -177,4 +177,12 @@ def sign_in(request):
     }
     return render(request, 'login.html', context)
 
+# 登出
+def log_out(request):
+    logout(request)
+    return redirect('/') #重新導向到登入畫面
+
+def collection(request):
+    return render(request, 'collection.html')
+
 

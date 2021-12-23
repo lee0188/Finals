@@ -55,14 +55,15 @@
 
     
 </script>
-    
-
 
 =======
-<div>
-    <a href="/login">登入</a>
-    <a href="/register">註冊</a>
-</div>
->>>>>>> 8588520c7e61b25ee71d559ea349f57c244b2966
+{% if request.user.is_authenticated %}
+    <p>{{request.user}} 您已經登入囉</p>
+    <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
+{% else %}
+    <p>您尚未登入喔～<a href="/login/">登入</a></p>
+    <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
+{% endif %}
+<a href="/collection">收藏清單</a>
 </body>
 </html>

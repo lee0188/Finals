@@ -26,4 +26,7 @@ urlpatterns = [
     path('',views.Berkeley_post),
     path('register/', views.sign_up, name='Register'),
     path('login/', views.sign_in, name='Login'),
+    path('logout/', views.log_out, name='Logout'),
+    path('collection/', views.collection, name='Collection'),
+
 ]

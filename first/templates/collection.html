@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <p>{{request.user}}的收藏清單</p>
+        <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
+    {% else %}
+        <p>登入後可將書加入收藏清單～<a href="/login/">登入</a></p>
+        <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
+    {% endif %}
+    <a href="/">回首頁</a>
+</body>
+</html>
