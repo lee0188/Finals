@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'heroku_e6822ed70ba3165',
         'USER':'ba728afa7c59fd',
-        'PASSWORD':'dbce769c',
+        'PASSWORD': 'dbce769c',
         'HOST':'us-cdbr-east-05.cleardb.net',
         'PORT':3306,
     }
@@ -88,7 +88,6 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
