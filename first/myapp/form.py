@@ -46,10 +46,10 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
 
-# class collection_tableModelForm(forms.ModelForm):
-#     class Meta:
-#         model = collection_table
-#         fields = ('__all__')
+class collection_tableModelForm(forms.ModelForm):
+    class Meta:
+        model = collection_table
+        fields = ('__all__')
 
 
 

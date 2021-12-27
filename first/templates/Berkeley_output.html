@@ -12,7 +12,15 @@
 .click {
   background-color:SteelBlue;
   color: white;
-  font-size: 15px;
+  font-size: 20px;
+}
+
+.btn{
+    width: 250px;
+    height: 55px;
+    padding: 5px;
+    margin: 10px;
+    font-size: 20px;
 }
 
 #preloader{
@@ -108,22 +116,22 @@ function menu3(){
 <body>
 
 <div>
-<button onclick="menu()" id="btn1" > 博客來</button>
-<button onclick="menu2()" id="btn2"> 北市圖書館</button>
-<button onclick="menu3()" id="btn3" > 新北圖書館</button>
+<button onclick="menu()" id="btn1" class="btn"> 博客來</button>
+<button onclick="menu2()" id="btn2" class='btn'> 北市圖書館</button>
+<button onclick="menu3()" id="btn3" class='btn'> 新北圖書館</button>
 </div>
 
 
 <div id='berkelyBS'>
 {% for k,v in berkely_bs.items %}
-<h3>第{{forloop.counter}}本書</h3>
+<h3>第{{forloop.counter}}本書 <button>加入收藏</button></h3>
 <ul>
     <li>書名 : <a href={{k}}>{{v.name}}</a></li>
     <li>價格 : {{v.price}}</li>
     <li>基本資訊 : {{v.data}}</li>
 </ul>
 
-<button>加入收藏</button>
+
 {% empty %}
 <span>{{msg}}</span>
 {%endfor%}
