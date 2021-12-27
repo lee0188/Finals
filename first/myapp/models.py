@@ -12,6 +12,9 @@ class student(models.Model):
     def __str__(self):
         return self.cName
 
-# class collection_table(models.Model):
-#     uName = models.CharField(max_length=1000, null=False)
-#     
+class collection_table(models.Model):
+    uName = models.CharField(max_length=500, null=False)
+    book_Name = models.CharField(max_length=100, null=False)
+    book_Price = models.DecimalField(max_digits=12, decimal_places=3)
+    book_Info = models.CharField(max_length=1000)
+    created_on = models.DateTimeField(auto_now_add=True)

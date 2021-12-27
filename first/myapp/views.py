@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, response
 from selenium.webdriver.common import keys
 from myapp.models import student
-from myapp.form import PostForm, RegisterForm, LoginForm
+from myapp.form import collection_tableModelForm, RegisterForm, LoginForm
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -115,6 +115,7 @@ def Berkeley_output(request,value):
                 'img': img,
             }
     berkely_bs = dict(list(berkely_bs.items())[:6]) #選前6本書即可
+    form = collection_tableModelForm()
     response = render(request, "Berkeley_output.html", locals())
     utf8 = value.encode('utf-8')
     if 'searchword' in request.COOKIES:
