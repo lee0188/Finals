@@ -1,3 +1,4 @@
+import abc
 from django.core.checks import messages
 from django.shortcuts import redirect, render
 # Create your views here.
@@ -41,7 +42,10 @@ def Chrome():
     # driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
     driver = webdriver.Chrome(options=chrome_options)
 
-Chrome()
+try:
+    print(driver.current_url)
+except:
+    Chrome()
 
 space = chr(32)+chr(10)+chr(9)+chr(13)+chr(160)+chr(5760)+chr(6158)+chr(8194)+chr(8195)+chr(8196)+chr(8197)+\
 chr(8198)+chr(8199)+chr(8200)+chr(8201)+chr(8202)+chr(8203)+chr(8204)+chr(8205)+\
@@ -58,22 +62,20 @@ def browser(path):
             Chrome()
 
 
-def set_cookie(request, key=None, value=None):
-    response = HttpResponse(' Cookie save')
-    response.set_cookie(key, value)
-    return response
-
 
 def delete_cookie(request,key):
-    if key in request.COOKIES:
-       response = HttpResponse('Delete Cookie: ' + key)
-       response.delete_cookie(key)
-       return response
-    else:
-        return HttpResponse('No cookies: ',key)
+    print('刪除搜尋紀錄',key)
+    now_cookies=ast.literal_eval(request.COOKIES['searchword']) #<class 'list'> each element is bytes.
+    en_ = key.encode('utf-8')
+    if en_ in now_cookies:
+        response = redirect('/Berkeley_post')
+        now_cookies.remove(en_)
+        response.set_cookie('searchword',str(now_cookies))
+        return response
  
-
+#搜尋結果
 def Berkeley_output(request,value):
+
     now = datetime.now()
     count = 0
     url = f'https://search.books.com.tw/search/query/key/{value}/cat/BKA'
@@ -116,34 +118,37 @@ def Berkeley_output(request,value):
             }
     berkely_bs = dict(list(berkely_bs.items())[:6]) #選前6本書即可
     form = collection_tableModelForm()
-    response = render(request, "Berkeley_output.html", locals())
-    utf8 = value.encode('utf-8')
-    if 'searchword' in request.COOKIES:
-        cookies= request.COOKIES['searchword']
-        cookies = ast.literal_eval(cookies)
-        if utf8 not in cookies:
-            cookies.append(utf8)
+    return render(request, "Berkeley_output.html", locals())
 
-        response.set_cookie('searchword',cookies)
-    else:
-        response.set_cookie('searchword',[utf8])
-    return response
 
+
+#搜尋介面
 def Berkeley_post(request):
     if request.COOKIES != None:
-        total = ''
         if 'searchword' in request.COOKIES:
             bytes_list = ast.literal_eval(request.COOKIES['searchword'])
-            for byte in bytes_list:
-                strcookie = byte.decode()
-                total = total +strcookie +', '
-        total = total.strip(', ')
+            bytes_list = [byte.decode() for byte in bytes_list]
 
     if request.method =='POST':
         keyword = request.POST['keyword'].strip(space)
         print('關鍵字',keyword)
-        if keyword !='':
-            return redirect(f'/Berkeley_output/{keyword}')
+        if keyword != '':
+
+            response = redirect(f'/Berkeley_output/{keyword}')
+
+            utf8 = keyword.encode('utf-8')
+            if 'searchword' in request.COOKIES:
+                cookies= request.COOKIES['searchword']
+                cookies = ast.literal_eval(cookies)
+                if utf8 not in cookies:
+                    cookies.append(utf8)
+
+                response.set_cookie('searchword',cookies)
+            else:
+                response.set_cookie('searchword',[utf8])
+
+
+            return response
     else:
         pass
     return render(request,'Berkeley_post.html',locals())

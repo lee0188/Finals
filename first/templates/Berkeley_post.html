@@ -4,33 +4,101 @@
 <title>查書平台_表單傳送</title>
 
 <style>
+
+a{
+    text-decoration:none; 
+    color:#2874A6;
+}
+a:hover{
+    text-decoration:underline;
+}
+
 .hide{
     display: none;
+}
+
+.close{
+    float:right;
+    cursor:pointer;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  border: 1px solid #ddd;
+  width: 300px;
+}
+ul li {
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+ul li:last-child {
+  border-bottom: none
 }
 </style>
 
 
 </head>
 <body>
-<form action="" method='POST' id='form1' >
+<div class="main">
+ <form action="" method='POST' id='form1' >
     {% csrf_token %}
-    <div>請輸入書籍關鍵字 :</div>
+    <div style="margin-bottom:9px">請輸入書籍關鍵字 :</div>
         <input type='text' name='keyword'  style='height: 25px; font-size:15px'/> 
 
-        <input type='submit' value='送出' style='height: 30px;'/>
+        <input type='submit' value='送出' style='height: 25px;'/>
 </form>
-<br>
-<div>搜尋紀錄 : {{total}}</div>
+{% if request.user.is_authenticated %}
+    <p>{{request.user}} 您已經登入囉</p>
+    <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
+{% else %}
+    <p>您尚未登入喔～<a href="/login/">登入</a></p>
+    <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
+{% endif %}
+<a href="/collection">收藏清單</a>
+</div>
+<br/>
+<h1 id='preloader' class='hide'>搜尋中，請稍後...</h1>  
 
-<h1 id='preloader' class='hide'>搜尋中，請稍後...</h1>
 
-<script>    
+<div class='record'>
+<ul >
+<li name='SR'>搜尋紀錄</li>
+{% for cookie in bytes_list%}    
+<li >
+    <a class='cookie_a' href='/Berkeley_output/{{cookie}}' >{{cookie}}</a>
+    <a class="close" href='/delete_cookie/{{cookie}}'>x</a>
+</li>
+{% empty %}
+{%endfor%}
+</ul>
+</div>
+
+
+
+<script>
     var x = document.getElementById("preloader");
         window.addEventListener("submit",function(){
             x.style.display='block'
     })
-</script>
 
+
+    let btns = document.querySelectorAll('.cookie_a');
+    for (i of btns) {
+    i.addEventListener('click', function() {
+        x.style.display='block';
+    });
+    }
+
+    let close_s = document.querySelectorAll('.close');
+    for (i of close_s) {
+    i.addEventListener('click', function() {
+        // alert('已刪除')
+    });
+    }
+
+</script>
 
 <script>
 
@@ -41,7 +109,7 @@
         // Current Time //
         var now = Date.now();
         // Ten Seconds //
-        var tenSec = 10 * 1000;
+        var tenSec = 100;
         // Plus Ten Seconds //
         var plusTenSec = currentDocumentTimestamp + tenSec;
         if (now > plusTenSec) {
@@ -58,13 +126,6 @@
     
 </script>
 
-{% if request.user.is_authenticated %}
-    <p>{{request.user}} 您已經登入囉</p>
-    <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
-{% else %}
-    <p>您尚未登入喔～<a href="/login/">登入</a></p>
-    <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
-{% endif %}
-<a href="/collection">收藏清單</a>
+
 </body>
 </html>
