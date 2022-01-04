@@ -1,0 +1,42 @@
+a{
+    text-decoration:none; 
+    color:#2874A6;
+}
+a:hover{
+    text-decoration:underline;
+}
+
+.hide{
+    display: none;
+}
+
+.close{
+    float:right;
+    cursor:pointer;
+}
+
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  border: 1px solid #ddd;
+  width: 300px;
+}
+ul li {
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+ul li:last-child {
+  border-bottom: none
+}
+
+img{
+  float: right;
+}
+
+#preloader{
+  /* border: 1px solid;  */
+  width: 280px;
+  text-align: left;
+}
