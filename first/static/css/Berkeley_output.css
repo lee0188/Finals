@@ -1,0 +1,56 @@
+body{
+    background-color: #585858	;
+    color: whitesmoke;
+  }
+
+a{
+    text-decoration:none; 
+    color:LightBlue;
+    font-weight:bold;
+}
+a:hover{
+    text-decoration:underline;
+}
+.hide{
+    display: none;
+}
+.click {
+  background-color:SteelBlue;
+  color: whitesmoke;
+  font-size: 20px;
+}
+
+.btn{
+    width: 250px;
+    height: 55px;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.section1 {
+    /* background-color: aqua; */
+    margin: 0px auto;
+    width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+ul {list-style-type: circle;}
+
+.tc_marc{
+  padding:0;
+  list-style-position: outside; /*沒有圓圈*/
+}
+
+table,td {
+    border: 1px solid yellow;
+}
+thead,tfoot {
+    background-color: red;
+    color: #fff;
+}
+

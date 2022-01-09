@@ -2,49 +2,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>查書平台_表單傳送</title>
+<title>就是書要你</title>
 
 <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
-
+<link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
 </head>
 
 
 <body>
 
 
+<div class="container0">
 <h1 id='preloader' class='hide'>
-    搜尋中，請稍後<img src="{% static '/images/loading.gif'%}" width="40" height="40">
+    搜尋中，請稍後<img src="{% static '/images/loading2.gif'%}" width="50" height="50" style='float: right;'>
 </h1>   
+</div>
 
 <div id="main">
+
+<div class="container1">
+{% if request.user.is_authenticated %}
+<div class="item">
+<p>{{request.user}} 您已登入</p>
+<a class="btn btn-lg btn-primary" href="/logout" ><button class="btnrp">登出</button></a>
+</div>
+{% else %}
+<div class="item"><p>您尚未登入<a href="/login/"><button class="btnrp">登入</button></a></p></div>
+<div class="item"><p>還沒有帳號<a href="/register"><button class="btnrp">註冊</button></a></p></div>
+<div class="item"><a href="/collection"><button class="btnrp">收藏清單</button></a></div>
+{% endif %}
+</div>
+
+<br/>
+<br/>
+<div class="container2">
 <form action="" method='POST' id='form1' >
     {% csrf_token %}
+    <img src="{% static '/images/favicons.jpg'%}"  width="250" height="250">
     <div style="margin-bottom:9px">請輸入書籍關鍵字 :</div>
-        <input type='text' name='keyword'  style='height: 25px; font-size:15px'/> 
+        <input type='text' name='keyword' /> 
 
-        <input type='submit' value='送出' style='height: 25px;'/>
+        <input type='submit' value='送出' />
 </form>
-{% if request.user.is_authenticated %}
-    <p>{{request.user}} 您已經登入囉</p>
-    <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
-{% else %}
-    <p>您尚未登入喔～<a href="/login/">登入</a></p>
-    <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
-{% endif %}
-<a href="/collection">收藏清單</a>
-<br/>
-<ul >
+
+
+<ul>
 <li name='SR'>搜尋紀錄</li>
 {% for cookie in bytes_list%}    
 <li >
-    <a class='cookie_a' href='/Berkeley_output/{{cookie}}' >{{cookie}}</a>
-    <a class="close" href='/delete_cookie/{{cookie}}'>x</a>
+    <div class='cookie_a'><a href='/Berkeley_output/{{cookie}}' >{{cookie}}</a></div>
+    <div><a class="close" href='/delete_cookie/{{cookie}}'>x</a></div>
 </li>
 {% empty %}
 {%endfor%}
 </ul>
 </div>
-
+</div>
 <script>
     var preloader = document.getElementById("preloader");
     var main = document.getElementById("main");

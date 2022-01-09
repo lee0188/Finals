@@ -1,142 +1,24 @@
+{% load static%}
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>查書平台_搜尋結果</title>
-
-
-<style>
-a{
-    text-decoration:none; 
-    color:#2874A6;
-}
-a:hover{
-    text-decoration:underline;
-}
-.hide{
-    display: none;
-}
-.click {
-  background-color:SteelBlue;
-  color: white;
-  font-size: 20px;
-}
-
-.btn{
-    width: 250px;
-    height: 55px;
-    padding: 5px;
-    margin: 10px;
-    font-size: 20px;
-}
-
-#preloader{
-    background: #000;
-    background-size: 10%;
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-}
-
-</style>
-
-
-
-<script>
-function menu(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib");
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-    if(x.style.display === 'none'){
-        x.style.display = "block";
-        y.style.display = 'none';
-        z.style.display = 'none'
-    }
-    else{
-        y.style.display = 'none';
-        z.style.display = 'none'
-    }
-
-    btn1.classList.add('click')
-    btn2.classList.remove('click')
-    btn3.classList.remove('click')
-}
-
-function menu2(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib");
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-
-    y.classList.toggle("hide");
-    if(y.style.display === 'none'){
-        y.style.display = "block";
-        x.style.display = 'none';
-        z.style.display = 'none'
-    }
-    else{
-        x.style.display = 'none';
-        z.style.display = 'none'
-    }
-
-    btn1.classList.remove('click')
-    btn2.classList.add('click')
-    btn3.classList.remove('click')
-
-}
-
-function menu3(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib"); 
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-
-    z.classList.toggle("hide");  
-    if(z.style.display === 'none'){
-        z.style.display = "block";
-        x.style.display = 'none';
-        y.style.display = 'none';
-    }
-    else{
-        x.style.display = 'none';
-        y.style.display = 'none'
-    }
-
-    btn1.classList.remove('click')
-    btn2.classList.remove('click')
-    btn3.classList.add('click')
-}
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-</script>
-
+<title>就是書要你</title>
+<link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_output.css"%}'>
+<link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
 
 </head>
 
 <body>
 
-<div>
+<div class="container0">
+    <h1 id='preloader' class='hide'>
+        搜尋中，請稍後<img src="{% static '/images/loading2.gif'%}" width="50" height="50" style='float: right;'>
+    </h1>   
+</div>
+
+<div id="main">
+<div class="section1">
 <button onclick="menu()" id="btn1" class="btn"> 博客來</button>
 <button onclick="menu2()" id="btn2" class='btn'> 北市圖書館</button>
 <button onclick="menu3()" id="btn3" class='btn'> 新北圖書館</button>
@@ -198,7 +80,7 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 
 </h3>
 <ul>
-    <li>書名 : <a href={{k}}>{{v.name}}</a></li>
+    <li>書名 : <a href={{k}} target="_blank" >{{v.name}}</a></li>
     <li>價格 : {{v.price}}</li>
     <li>基本資訊 : {{v.data}}</li>
 </ul>
@@ -209,15 +91,54 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 {%endfor%}
 </div>
 
+
 <div id='TC_lib' class='hide'>
-台北市圖書館館藏
+{% if dVC is not None %}
+<br/>
+<h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
+{% for marc1, marc2 in marc  %}
+<ul class="tc_marc">
+    <li>{{marc1}}{{marc2}}</li>
+</ul>
+{% empty %}
+{% endfor %}
+<table>
+    <thead>
+    <tr>
+    <th>典藏館</th>
+    <th>索書號</th>
+    <th>編號</th>
+    <th>館藏類型</th>
+    <th>館藏位置(到期日期僅為期限，不代表上架日期)</th>
+    <th>註記</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for p1, p2, p3, p4, p5 in posit  %}
+    <tr>
+        <td>{{p1}}</td><td>{{p2}}</td><td>{{p3}}</td><td>{{p4}}</td><td>{{p5}}</td>
+    </tr>
+    {% empty %}
+    {% endfor %}
+    </tbody>
+
+</table>
+
+
+{% else %}
+
+
+{% endif %}
+
 </div>
 
 <div id='NT_lib' class='hide'>
 新北市圖書館館藏
 </div>
 
+</div>
 
+<script src="{% static '/css/Berkeley_output.js' %}"></script>
 
 </body>
 </html>
