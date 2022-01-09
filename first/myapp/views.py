@@ -126,7 +126,7 @@ def Berkeley_output(request,value):
                 berkely_bs[href]['fav'] = "加入收藏"
         return render(request, "Berkeley_output.html", locals())
     else:
-        for href, v in berkely_bs:
+        for href in berkely_bs:
             berkely_bs[href]['fav'] = "加入收藏"
         return render(request, "Berkeley_output.html", locals())
 
