@@ -350,7 +350,12 @@ def log_out(request):
     return redirect('/') #重新導向到登入畫面
 
 def collection(request):
-    return render(request, 'collection.html')
+    exist_records = collection_table.objects.filter(uName=request.user)
+    for i in exist_records:
+        print(i)
+        print(i.book_Name)
+    print(type(exist_records))
+    return render(request, 'collection.html', locals())
 
 def add_fav_ajax(request):
     data = {'success': False}
