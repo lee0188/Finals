@@ -13,8 +13,9 @@ class student(models.Model):
         return self.cName
 
 class collection_table(models.Model):
-    uName = models.CharField(max_length=500, null=False)
-    book_Name = models.CharField(max_length=100, null=False)
-    book_Price = models.DecimalField(max_digits=12, decimal_places=3)
+    uName = models.CharField(max_length=500)
+    book_Name = models.CharField(max_length=100)
+    book_url = models.CharField(max_length=2000)
+    book_Price = models.DecimalField(max_digits=12, decimal_places=3, default=0)
     book_Info = models.CharField(max_length=1000)
     created_on = models.DateTimeField(auto_now_add=True)

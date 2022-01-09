@@ -2,12 +2,12 @@ import abc
 from django.core.checks import messages
 from django.shortcuts import redirect, render
 # Create your views here.
-from django.http import HttpResponse, response
+from django.http import HttpResponse, response, JsonResponse
 from selenium.webdriver.common import keys
-from myapp.models import student
+from myapp.models import student, collection_table
 from myapp.form import collection_tableModelForm, RegisterForm, LoginForm
 from django.contrib.auth import authenticate
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.template.defaulttags import register
 from django.utils.encoding import smart_str
@@ -27,7 +27,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 # if using mac need this
-# from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 # Create your views here.
@@ -39,8 +39,8 @@ def Chrome():
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
     # if using mac need this
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+    # driver = webdriver.Chrome(options=chrome_options)
 
 try:
     print(driver.current_url)
@@ -117,8 +117,18 @@ def Berkeley_output(request,value):
                 'img': img,
             }
     berkely_bs = dict(list(berkely_bs.items())[:6]) #選前6本書即可
-    form = collection_tableModelForm()
-    return render(request, "Berkeley_output.html", locals())
+    if request.user.is_authenticated:
+        for href in berkely_bs:
+            exist_records = collection_table.objects.filter(uName=request.user, book_url=href, book_Name=berkely_bs[href]['name'], book_Price=int(berkely_bs[href]['price']))
+            if exist_records:
+                berkely_bs[href]['fav'] = "取消收藏"
+            else:
+                berkely_bs[href]['fav'] = "加入收藏"
+        return render(request, "Berkeley_output.html", locals())
+    else:
+        for href, v in berkely_bs:
+            berkely_bs[href]['fav'] = "加入收藏"
+        return render(request, "Berkeley_output.html", locals())
 
 
 
@@ -190,5 +200,44 @@ def log_out(request):
 
 def collection(request):
     return render(request, 'collection.html')
+
+def add_fav_ajax(request):
+    data = {'success': False}
+    if request.method=='POST':
+        bookname = request.POST.get("bookname")
+        bookurl = request.POST.get("bookurl")
+        bookprice = request.POST.get("bookprice", 0)
+        bookinfo = request.POST.get("bookinfo")
+        
+
+        if not request.user.is_authenticated:
+            data['success'] = -1
+            return JsonResponse(data)
+
+        exist_records = collection_table.objects.filter(uName=request.user, book_url=bookurl, book_Name=bookname, book_Price=bookprice)
+        
+        if exist_records:
+            exist_records.delete()
+            data['success'] = -2
+
+        else:
+            datas = {'uName': request.user, 'book_url': bookurl, 
+                'book_Name': bookname, 'book_Price': int(bookprice), 'book_Info': bookinfo}
+            form = collection_tableModelForm(datas)
+            form.uName = request.user
+            form.book_url = bookurl
+            form.book_Name = bookname
+            form.book_Price = int(bookprice)
+            form.book_Info = bookinfo
+            if form.is_valid():
+                form.save()
+                data['success'] = True
+            else:
+                print(form.errors)
+                print("表單錯誤")
+    return JsonResponse(data)
+
+
+
 
 

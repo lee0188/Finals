@@ -47,6 +47,19 @@ class LoginForm(forms.Form):
     )
 
 class collection_tableModelForm(forms.ModelForm):
+    # uName = forms.CharField(
+    #     label="帳號",
+    #     widget=forms.TextInput(attrs={'class': 'form-control'})
+    # )
+    # book_Name = forms.CharField(
+    #     label="書名"
+    #     )
+    # book_Price = forms.DecimalField(
+    #     label="價格")
+    # book_Info = forms.CharField(
+    #     label="基本資訊")
+    # created_on = forms.DateTimeField(
+    #     label="創建日期")
     class Meta:
         model = collection_table
         fields = ('__all__')

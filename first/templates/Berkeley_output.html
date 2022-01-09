@@ -114,7 +114,21 @@ function menu3(){
     btn3.classList.add('click')
 }
 
-
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 
 
@@ -131,7 +145,58 @@ function menu3(){
 
 <div id='berkelyBS'>
 {% for k,v in berkely_bs.items %}
-<h3>第{{forloop.counter}}本書 <button>加入收藏</button></h3>
+<h3>第{{forloop.counter}}本書
+<!-- <button id="add_fav_book_button" class="btn-round btn-light">加入收藏</button> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+// 添加或取消收藏
+function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
+    if (document.getElementById(id).innerHTML == "加入收藏"){
+        alert("確認加入收藏？");
+    }
+    else
+        alert("確認取消收藏？");
+    
+    const csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url:"{% url 'add_fav_ajax' %}",
+        data:{"bookname": bookname, "bookurl": bookurl,"bookprice": bookprice, "bookinfo": bookinfo},
+        async: true,
+        dataType: "json",
+        headers: {
+           'X-CSRFToken': csrftoken
+        },
+        success: function(data){
+            if (data['success'] == -1)
+                alert("尚未登入")
+            else if(data['success'] == -2){
+                alert("成功刪除收藏");
+                $('#' + id).show().html('加入收藏');
+            }
+            else if (data['success']){
+                alert("成功加入收藏清單");
+                $('#' + id).show().html('取消收藏');
+            }
+            else
+                alert("嘗試後失敗")
+        },
+        error : function() {
+            alert('直接失敗');
+        },
+
+    })
+}
+// $('#add_fav_book_button').on('click', function(){
+//     // add_fav_book({{v.name}}, {{k}}, {{v.price}}, {{v.data}});
+//     alert("check");
+// });
+</script>
+
+<button onclick='add_fav_book("{{v.name}}", "{{k}}", "{{v.price}}", "{{v.data}}", "{{v.fav}}", "{{forloop.counter}}")' id={{forloop.counter}} class="btn-round btn-light">{{v.fav}}</button>
+
+
+</h3>
 <ul>
     <li>書名 : <a href={{k}}>{{v.name}}</a></li>
     <li>價格 : {{v.price}}</li>

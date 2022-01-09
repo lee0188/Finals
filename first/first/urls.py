@@ -28,5 +28,6 @@ urlpatterns = [
     path('login/', views.sign_in, name='Login'),
     path('logout/', views.log_out, name='Logout'),
     path('collection/', views.collection, name='Collection'),
+    path('add_fav_ajax/', views.add_fav_ajax, name='add_fav_ajax'),
 
 ]
