@@ -26,6 +26,7 @@
 
 
 <div id='berkelyBS'>
+<div class="ber">
 {% for k,v in berkely_bs.items %}
 <h3>第{{forloop.counter}}本書
 <!-- <button id="add_fav_book_button" class="btn-round btn-light">加入收藏</button> -->
@@ -85,24 +86,28 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
     <li>基本資訊 : {{v.data}}</li>
 </ul>
 
-
 {% empty %}
 <span>{{msg}}</span>
 {%endfor%}
 </div>
+</div>
 
 
 <div id='TC_lib' class='hide'>
-{% if dVC is not None %}
-<br/>
-<h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
-{% for marc1, marc2 in marc  %}
-<ul class="tc_marc">
-    <li>{{marc1}}{{marc2}}</li>
-</ul>
-{% empty %}
-{% endfor %}
-<table>
+{% if len_detail != 0 %}   
+<div class="show">
+    <br/>
+    <div class="marc">
+    <h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
+    {% for marc1, marc2 in marc  %}
+    <ul class="tc_marc">
+        <li>{{marc1}}{{marc2}}</li>
+    </ul>
+    {% empty %}
+    {% endfor %}
+    </div>
+    <div class="location">
+    <table>
     <thead>
     <tr>
     <th>典藏館</th>
@@ -113,23 +118,61 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
     <th>註記</th>
     </tr>
     </thead>
+
     <tbody>
-    {% for p1, p2, p3, p4, p5 in posit  %}
+    {% for row in positAll %}    
     <tr>
-        <td>{{p1}}</td><td>{{p2}}</td><td>{{p3}}</td><td>{{p4}}</td><td>{{p5}}</td>
+        <td>{{row.0}}</td><td>{{row.1}}</td><td>{{row.2}}</td><td>{{row.3}}</td><td>{{row.4}}</td><td>{{row.5}}</td>
     </tr>
     {% empty %}
     {% endfor %}
     </tbody>
-
-</table>
-
+    </table>
+    </div>
+</div>
 
 {% else %}
-
-
+    {% for whole in last %}
+        <div class="show">
+                <br/>
+                <button>加入收藏</button>
+                <div class="marc">
+                <h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
+                {% for marc1, marc2 in whole.0  %}
+                <ul class="tc_marc">
+                    <li>{{marc1}}{{marc2}}</li>
+                </ul>
+                {% empty %}
+                {% endfor %}
+                </div>
+                <div class="location">
+                <table>
+                <thead>
+                <tr>
+                <th>典藏館</th>
+                <th>索書號</th>
+                <th>編號</th>
+                <th>館藏類型</th>
+                <th>館藏位置(到期日期僅為期限，不代表上架日期)</th>
+                <th>註記</th>
+                </tr>
+                </thead>
+            
+                <tbody>
+                {% for row in whole.1 %}    
+                <tr>
+                    <td>{{row.0}}</td><td>{{row.1}}</td><td>{{row.2}}</td><td>{{row.3}}</td><td>{{row.4}}</td><td>{{row.5}}</td>
+                </tr>
+                {% empty %}
+                {% endfor %}
+                </tbody>
+                </table>
+                </div>
+        </div>
+    {% empty %}
+    {% endfor %}
+        
 {% endif %}
-
 </div>
 
 <div id='NT_lib' class='hide'>

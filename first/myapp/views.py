@@ -75,14 +75,13 @@ def delete_cookie(request,key):
  
 #搜尋結果
 def Berkeley_output(request,value):
-
     #博客來
     count = 0
     url = f'https://search.books.com.tw/search/query/key/{value}/cat/BKA'
     while True:  #確保搜尋有效
         try:
             browser(url)
-            time.sleep(3)
+            time.sleep(2)
             soup=BeautifulSoup(driver.page_source,'html.parser')
         except:
             pass
@@ -127,157 +126,100 @@ def Berkeley_output(request,value):
     else:
         for href in berkely_bs:
             berkely_bs[href]['fav'] = "加入收藏"
+    print(f'{value} 博客來搜尋結束')
     
     #台北市立圖書館
     driver.get('https://book.tpml.edu.tw/webpac/webpacIndex.jsp')
     keyword = driver.find_element(By.CSS_SELECTOR,'#search_inputS')
     keyword.send_keys(value)
     keyword.submit()
-    soup=BeautifulSoup(driver.page_source,'html.parser')
-    dVC = soup.find('div',id='detailViewDetailContent')
-    if dVC is not None:
+    time.sleep(2)
+    soup = BeautifulSoup(driver.page_source,'html.parser')
+    dVC = soup.find_all('div',id='detailViewDetailContent')
+    len_detail = len(dVC)
+    if len_detail != 0:
+        print(f'{value} 北市圖只有一本館藏')
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
+        soup = BeautifulSoup(driver.page_source,'html.parser')
         TC_BookName = soup.find('h3').text
-        key = dVC.findAll('table')
-        marc=[]
+        key = dVC[0].findAll('table')
+        marc = []
         for i in key:
             td_name = i.findAll('td')[0].text
             td_content = i.findAll('td')[1].text
             marc.append((td_name, td_content))
-        print('---館藏資訊---')
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         div = soup.find('div',{'id':'integratehold'})
         head = div.findAll('th')
         tr = div.findAll('tr')
+        positAll = []
         for i in tr[1:]:
             posit = []
-            for j in range(0,len(head)-1):
+            for j in range(0,len(head)):
                 body = i.findAll('td')
-                table_body = body[j].text
-                if j==4:
-                    if table_body=='一般書庫區':
-                        posit.append((table_body))
-                else:
-                    posit.append((table_body))
-            print(posit)
-            print('-----')
-
+                table_body = body[j].text            
+                posit.append((table_body))
+            positAll.append(posit)
     else:
-        print('多本')
-        #book1
-        print('---BOOK 1---')
-        try:
-            iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
-            driver.switch_to.frame(iframe)
-            a = driver.find_element(By.XPATH,'/html/body/div[2]/div[4]/table/tbody/tr[1]/td[2]/div/div[1]/a')
-            a.click()
-            search= driver.current_url
-            url_list = search.split('=')
-            key = url_list[1]
-            id = key[:-6]
-            book_name = driver.find_element(By.XPATH,'/html/body/div[1]/table/tbody/tr/td[1]/div/div/table/tbody/tr/td[2]/h3')
-            print(book_name.text)
-            url = f'https://book.tpml.edu.tw/webpac/maintain/bookDetailAssdataAjax.do?id={id}'
-            res = requests.get(url)
-            html = res.text
-            soup = BeautifulSoup(html, 'html.parser')
-            key = soup.findAll('table')
-            for i in key:
-                td = i.findAll('td')
-                print(td[0].text, td[1].text)
-            print('---館藏資訊---')
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            div = soup.find('div',{'id':'integratehold'})
-            head = div.findAll('th')
-            tr = div.findAll('tr')
-            for i in tr[1:]:
-                for j in range(0,len(head)-1):
-                    body = i.findAll('td')
-                    if j==4:
-                        if body[j].text=='一般書庫區':
-                            print(head[j].text,':',body[j].text)
-                    else:
-                        print(head[j].text,':',body[j].text)
-                print('-----')
-            driver.back()
-        except:
-            print('Finished')
-        #book2
-        print('---BOOK 2---')
-        try:
-            iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
-            driver.switch_to.frame(iframe)
-            a = driver.find_element(By.XPATH,'/html/body/div[2]/div[4]/table/tbody/tr[3]/td[2]/div/div[1]/a')
-            a.click()
-            search= driver.current_url
-            url_list = search.split('=')
-            key = url_list[1]
-            id = key[:-6]
-            book_name = driver.find_element(By.XPATH,'/html/body/div[1]/table/tbody/tr/td[1]/div/div/table/tbody/tr/td[2]/h3')
-            print(book_name.text)
-            url = f'https://book.tpml.edu.tw/webpac/maintain/bookDetailAssdataAjax.do?id={id}'
-            res = requests.get(url)
-            html = res.text
-            soup = BeautifulSoup(html, 'html.parser')
-            key = soup.findAll('table')
-            for i in key:
-                td = i.findAll('td')
-                print(td[0].text, td[1].text)
-            print('---館藏資訊---')
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            div = soup.find('div',{'id':'integratehold'})
-            head = div.findAll('th')
-            tr = div.findAll('tr')
-            for i in tr[1:]:
-                for j in range(0,len(head)-1):
-                    body = i.findAll('td')
-                    if j==4:
-                        if body[j].text=='一般書庫區':
-                            print(head[j].text,':',body[j].text)
-                    else:
-                        print(head[j].text,':',body[j].text)
-                print('-----')
-            driver.back()
-        except:
-            print('Finished')
-        #book3
-        print('---BOOK 3---')
-        try:
-            iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
-            driver.switch_to.frame(iframe)
-            a = driver.find_element(By.XPATH,'/html/body/div[2]/div[4]/table/tbody/tr[5]/td[2]/div/div[1]/a')
-            a.click()
-            search= driver.current_url
-            url_list = search.split('=')
-            key = url_list[1]
-            id = key[:-6]
-            book_name = driver.find_element(By.XPATH,'/html/body/div[1]/table/tbody/tr/td[1]/div/div/table/tbody/tr/td[2]/h3')
-            print(book_name.text)
-            url = f'https://book.tpml.edu.tw/webpac/maintain/bookDetailAssdataAjax.do?id={id}'
-            res = requests.get(url)
-            html = res.text
-            soup = BeautifulSoup(html, 'html.parser')
-            key = soup.findAll('table')
-            for i in key:
-                td = i.findAll('td')
-                print(td[0].text, td[1].text)
-            print('---館藏資訊---')
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            div = soup.find('div',{'id':'integratehold'})
-            head = div.findAll('th')
-            tr = div.findAll('tr')
-            for i in tr[1:]:
-                for j in range(0,len(head)-1):
-                    body = i.findAll('td')
-                    if j==4:
-                        if body[j].text=='一般書庫區':
-                            print(head[j].text,':',body[j].text)
-                    else:
-                        print(head[j].text,':',body[j].text)
-                print('-----')
-        except:
-            print('Finished')
+        iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
+        driver.switch_to.frame(iframe)
+        soup = BeautifulSoup(driver.page_source,'html.parser')
+        totalnum = int(soup.find('em',id='totalpage').text)
+        if totalnum >= 3:
+            totalnum = 3
+        
+        html_num = [fm + 1 for fm in range(totalnum)]
+        print(f'{value} 北市圖有多本館藏,{html_num}')
 
+        last =[]
+        count = 0
+        for fm in range(totalnum):
+            print(f'---BOOK {fm+1}---')
+            count+=1
+            addup = []
+            try:
+                a = driver.find_element(By.XPATH,f'/html/body/div[2]/div[4]/table/tbody/tr[{fm + count}]/td[2]/div/div[1]/a')
+                a.click()
+                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
+                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                
+                TC_BookName = soup.find('h3').text
+                dVC = soup.find('div',id='detailViewDetailContent')
+                key = dVC.findAll('table')
+                marc = []
+                for i in key:
+                    td_name = i.findAll('td')[0].text
+                    td_content = i.findAll('td')[1].text
+                    marc.append((td_name, td_content))
+                print('---館藏資訊---')
+                addup.append(marc)
+
+                soup = BeautifulSoup(driver.page_source, 'html.parser')
+                div = soup.find('div',{'id':'integratehold'})
+                head = div.findAll('th')
+                tr = div.findAll('tr')
+                
+                positAll = []
+                for i in tr[1:]:
+                    posit = []
+                    for j in range(0,len(head)):
+                        body = i.findAll('td')
+                        table_body = body[j].text            
+                        posit.append((table_body))
+                    positAll.append(posit)
+                addup.append(positAll)
+
+                driver.back()
+                iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
+                driver.switch_to.frame(iframe)
+                print('==='*40)
+            except:
+                print('Finished')
+            else:
+                last.append(addup)
 
     return render(request, "Berkeley_output.html", locals())
 

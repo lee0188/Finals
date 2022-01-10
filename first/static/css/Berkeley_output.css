@@ -46,11 +46,30 @@ ul {list-style-type: circle;}
   list-style-position: outside; /*沒有圓圈*/
 }
 
-table,td {
-    border: 1px solid yellow;
+table,td{
+    border: 1px solid whitesmoke;
+    border-collapse: collapse;
 }
-thead,tfoot {
-    background-color: red;
-    color: #fff;
+
+thead,th{
+    border: 1px solid whitesmoke;
+    border-collapse: collapse;
+    background-color: SteelBlue;
 }
+.ber{
+  margin: 0px auto;
+  width: 1200px;
+}
+
+.show{
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:space-evenly;
+  align-items: start;  
+}
+.marc{
+  width: 500px;
+}
+
 
