@@ -71,6 +71,9 @@ thead,th{
   justify-content:left;
   align-items: start;  
 }
+button{
+  cursor: pointer;
+}
 .marc{
   width: 400px;
   margin-left: 40px;
