@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>就是書要你</title>
-
+<title>就是書要你 Home</title>
 <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
 <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
 </head>
@@ -24,16 +23,15 @@
 {% if request.user.is_authenticated %}
 <div class="item">
 <p>{{request.user}} 您已登入</p>
-<a class="btn btn-lg btn-primary" href="/logout" ><button class="btnrp">登出</button></a>
+<a class="btn btn-lg btn-primary" href="/logout" >登出</a>
 <br/>
 <br/>
-<div class="item"><a href="/collection"><button class="btnrp">收藏清單</button></a>
 </div>
 {% else %}
-<div class="item"><p>您尚未登入<a href="/login/"><button class="btnrp">登入</button></a></p></div>
-<div class="item"><p>還沒有帳號<a href="/register"><button class="btnrp">註冊</button></a></p></div>
-<div class="item"><a href="/collection"><button class="btnrp">收藏清單</button></a></div>
+<div class="item"><p>您尚未登入<a href="/login/" style="margin-left:10px;">登入</a></p></div>
+<div class="item"><p>還沒有帳號<a href="/register" style="margin-left:10px;">註冊</a></p></div>
 {% endif %}
+<div class="item"><a href="/collection" style="margin-left:10px;">收藏清單</a></div>
 </div>
 
 <br/>
@@ -43,9 +41,9 @@
     {% csrf_token %}
     <img src="{% static '/images/favicons.jpg'%}"  width="250" height="250">
     <div style="margin-bottom:9px">請輸入書籍關鍵字 :</div>
-        <input type='text' name='keyword' /> 
+        <input type='text' name='keyword' id='keyin'/> 
 
-        <input type='submit' value='送出' />
+        <input type='submit' value='送出' id='send'/>
 </form>
 
 

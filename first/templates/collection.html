@@ -1,45 +1,11 @@
+{% load static%}
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>收藏清單</title>
-
-
-<style>
-a{
-    text-decoration:none; 
-    color:#2874A6;
-}
-a:hover{
-    text-decoration:underline;
-}
-.hide{
-    display: none;
-}
-.click {
-  background-color:SteelBlue;
-  color: white;
-  font-size: 20px;
-}
-
-.btn{
-    width: 250px;
-    height: 55px;
-    padding: 5px;
-    margin: 10px;
-    font-size: 15px;
-}
-
-#preloader{
-    background: #000;
-    background-size: 10%;
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-}
-
-</style>
-
+    <title>就是書要你 收藏清單</title>
+    <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
+    <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
 
 
 <script>
@@ -159,8 +125,8 @@ function menu3(){
 </div>
 
 {% else %}
-    <p>登入後可將書加入收藏清單～<a href="/login/">登入</a></p>
-    <p>還沒有帳號嗎？<a href="/register">註冊</a></p>
+    <p>登入後可將書加入收藏清單<a href="/login/" style="margin-left:10px;">登入</a></p>
+    <p>尚未有帳號<a href="/register" style="margin-left:10px;">註冊</a></p>
 {% endif %}
 
 </body>

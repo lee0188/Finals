@@ -49,6 +49,8 @@ ul {list-style-type: circle;}
 table,td{
     border: 1px solid whitesmoke;
     border-collapse: collapse;
+    width: 900px;
+    margin-left: 20px;
 }
 
 thead,th{
@@ -63,13 +65,15 @@ thead,th{
 
 .show{
   margin-top: 40px;
+  margin-left: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content:space-evenly;
+  justify-content:left;
   align-items: start;  
 }
 .marc{
-  width: 500px;
+  width: 400px;
+  margin-left: 40px;
 }
 
 

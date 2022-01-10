@@ -31,7 +31,7 @@ a:hover{
   justify-content: space-evenly;
   align-items: start;
 }
-button{
+button,input[type="submit"]{
   height: 25px;
   cursor: pointer;
   border-radius: 4px;
@@ -40,17 +40,16 @@ button{
   color: whitesmoke;
 }
 .btnrp{
-  margin-left:10px ;
+  margin-left:10px;
 }
-input[type="text"]
-{
+
+#keyin{
   height:30px; 
   width: 250px;
   font-size: 20px;
 }
 
-input[type="submit"]
-{
+#send{
   height: 35px;
   cursor: pointer;
   border-radius: 4px;

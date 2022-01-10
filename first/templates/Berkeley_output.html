@@ -3,7 +3,7 @@
 <html>
 
 <head>
-<title>就是書要你</title>
+<title>就是書要你 搜尋結果</title>
 <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_output.css"%}'>
 <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
 
@@ -94,9 +94,10 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 
 
 <div id='TC_lib' class='hide'>
-{% if len_detail != 0 %}   
+{% if len_detail > 0 %}   
 <div class="show">
     <br/>
+    <button>加入收藏</button>
     <div class="marc">
     <h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
     {% for marc1, marc2 in marc  %}
@@ -130,56 +131,106 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
     </table>
     </div>
 </div>
+{% elif len_detail == 0 %}
+    {% if totalnum > 0 %}
+        {% for whole in last %}
+            <div class="show">
+                    <br/>
+                    <button>加入收藏</button>
+                    <div class="marc">
+                    <h3 style="font-weight:bold;">書名 : {{whole.0}}</h3>
+                    {% for marc1, marc2 in whole.1  %}
+                    <ul class="tc_marc">
+                        <li>{{marc1}}{{marc2}}</li>
+                    </ul>
+                    {% empty %}
+                    {% endfor %}
+                    </div>
+                    <div class="location">
+                    <table>
+                    <thead>
+                    <tr>
+                    <th>典藏館</th>
+                    <th>索書號</th>
+                    <th>編號</th>
+                    <th>館藏類型</th>
+                    <th>館藏位置</th>
+                    <th>註記</th>
+                    </tr>
+                    </thead>
+                
+                    <tbody>
+                    {% for row in whole.2 %}    
+                    <tr>
+                        <td>{{row.0}}</td><td>{{row.1}}</td><td>{{row.2}}</td><td>{{row.3}}</td><td>{{row.4}}</td><td>{{row.5}}</td>
+                    </tr>
+                    {% empty %}
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                    </div>
+            </div>
+        {% empty %}
+        {% endfor %}  
+    {% elif totalnum == 0 %}
+            <div class="ber">{{msg2}}</div>
+    {% endif %}
 
-{% else %}
-    {% for whole in last %}
-        <div class="show">
-                <br/>
-                <button>加入收藏</button>
-                <div class="marc">
-                <h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
-                {% for marc1, marc2 in whole.0  %}
-                <ul class="tc_marc">
-                    <li>{{marc1}}{{marc2}}</li>
-                </ul>
-                {% empty %}
-                {% endfor %}
-                </div>
-                <div class="location">
-                <table>
-                <thead>
-                <tr>
-                <th>典藏館</th>
-                <th>索書號</th>
-                <th>編號</th>
-                <th>館藏類型</th>
-                <th>館藏位置(到期日期僅為期限，不代表上架日期)</th>
-                <th>註記</th>
-                </tr>
-                </thead>
-            
-                <tbody>
-                {% for row in whole.1 %}    
-                <tr>
-                    <td>{{row.0}}</td><td>{{row.1}}</td><td>{{row.2}}</td><td>{{row.3}}</td><td>{{row.4}}</td><td>{{row.5}}</td>
-                </tr>
-                {% empty %}
-                {% endfor %}
-                </tbody>
-                </table>
-                </div>
-        </div>
-    {% empty %}
-    {% endfor %}
-        
 {% endif %}
 </div>
 
+
+
+
 <div id='NT_lib' class='hide'>
-新北市圖書館館藏
+{% if no_data_len == 0  %}
+    {% for NT_e in NT_last %}
+    <div class="show">
+        <button>加入收藏</button>
+        <div class="marc">
+        <h3 style="font-weight:bold;">書名 : {{NT_e.0}}</h3>
+        {% for para1, para2 in NT_e.1 %}
+        <ul class="tc_marc">
+            <li>{{para1}} : {{para2}}</li>
+        </ul>
+        {% empty %}
+        {% endfor %}
+        </div>
+        <div class="location">
+            <table>
+            <thead>
+            <tr>
+            <th>條碼號</th>
+            <th>典藏地名稱</th>
+            <th>館藏流通類別</th>
+            <th>資料類型</th>
+            <th>索書號</th>
+            <th>館藏狀態</th>
+            <th>預約人數</th>
+            <th>備註</th>
+            <th>附件</th>
+            <th>預約</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ro in NT_e.2 %}    
+            <tr>
+                <td>{{ro.0}}</td><td>{{ro.1}}</td><td>{{ro.2}}</td><td>{{ro.3}}</td><td>{{ro.4}}</td><td>{{ro.5}}</td><td>{{ro.6}}</td><td>{{ro.7}}</td><td>{{ro.8}}</td><td>{{ro.9}}</td>
+            </tr>
+            {% empty %}
+            {% endfor %}
+            </tbody>
+            </table>
+            </div>
+
+    </div>
+    {% empty %}
+    {% endfor %}
+{% elif no_data_len > 0 %}
+    <div class="ber">{{msg3}}</div>
+{% endif %} 
 </div>
 
-</div>
 
 <script src="{% static '/css/Berkeley_output.js' %}"></script>
 

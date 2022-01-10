@@ -1,20 +1,14 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>就是書要你 登入</title>
+    <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
+    <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
 
-<style>
-a{
-    text-decoration:none; 
-    color:#2874A6;
-}
-a:hover{
-    text-decoration:underline;
-}
 
-</style>
 </head>
 <body>
     <h3>登入</h3>
@@ -24,7 +18,7 @@ a:hover{
         {{ form }}
 
         <input class="btn btn-primary" type="submit" value="送出" />
-        <p>還沒有帳號嗎? <a href="{% url 'Register' %}">註冊</a></p>
+        <p>尚未有帳號<a href="{% url 'Register' %}" style="margin-left:10px;">註冊</a></p>
         <a href="/">回首頁</a>
     </form>
 </body>

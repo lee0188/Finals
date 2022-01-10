@@ -15,7 +15,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
 
-import requests, random, time,sys, ast
+import requests, random, time,sys, ast, traceback
 from bs4 import BeautifulSoup
 from datetime import datetime
 from selenium import webdriver
@@ -92,7 +92,6 @@ def Berkeley_output(request,value):
                 if none_item != []:
                     msg = f'博客來沒有 {value} 的資料'
                 break
-
             else:
                 print(f"{value} 博客來 搜尋結果異常")
                 count+=1
@@ -139,8 +138,8 @@ def Berkeley_output(request,value):
     len_detail = len(dVC)
     if len_detail != 0:
         print(f'{value} 北市圖只有一本館藏')
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
+        WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
+        WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
         soup = BeautifulSoup(driver.page_source,'html.parser')
         TC_BookName = soup.find('h3').text
         key = dVC[0].findAll('table')
@@ -149,7 +148,6 @@ def Berkeley_output(request,value):
             td_name = i.findAll('td')[0].text
             td_content = i.findAll('td')[1].text
             marc.append((td_name, td_content))
-
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         div = soup.find('div',{'id':'integratehold'})
         head = div.findAll('th')
@@ -167,60 +165,111 @@ def Berkeley_output(request,value):
         driver.switch_to.frame(iframe)
         soup = BeautifulSoup(driver.page_source,'html.parser')
         totalnum = int(soup.find('em',id='totalpage').text)
-        if totalnum >= 3:
-            totalnum = 3
+        if totalnum > 0:
+            if totalnum > 3:
+                totalnum = 3
+            html_num = [fm + 1 for fm in range(totalnum)]
+            print(f'{value} 北市圖有{totalnum}本館藏')
+            hrefs = ['https://book.tpml.edu.tw/webpac/' + i.a['href'] for i in soup.find_all('h4')]
+            last = []
+            for fm in range(totalnum):
+                addup = []
+                try:
+                    driver.get(hrefs[fm])
+                    WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
+                    WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
+                    
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    TC_BookName = soup.find('h3').text
+                    addup.append(TC_BookName)
+
+                    dVC = soup.find('div',id='detailViewDetailContent')
+                    key = dVC.findAll('table')
+                    marc = []
+                    for i in key:
+                        td_name = i.findAll('td')[0].text
+                        td_content = i.findAll('td')[1].text
+                        marc.append((td_name, td_content))
+                    addup.append(marc)
+
+                    soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    div = soup.find('div',{'id':'integratehold'})
+                    head = div.findAll('th')
+                    tr = div.findAll('tr')
+                    positAll = []
+                    for i in tr[1:]:
+                        posit = []
+                        for j in range(0,len(head)):
+                            body = i.findAll('td')
+                            table_body = body[j].text            
+                            posit.append((table_body))
+                        positAll.append(posit)
+                    addup.append(positAll)
+                except:
+                    print(hrefs[fm], fm)
+                    print(traceback.format_exc())
+                else:
+                    last.append(addup)
+        elif totalnum == 0:
+            msg2 = f'北市圖沒有 {value} 的資料'
+
+
+    #新北市立圖書館
+    driver.get(f'https://webpac.tphcc.gov.tw/webpac/search.cfm?m=ss&k0={value}&t0=k&c0=and')
+    time.sleep(1)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    no_data_len = len(soup.find_all('p',string='無符合館藏資料'))
+    if no_data_len == 0:
+        WebDriverWait(driver,5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="wrap"]/div[3]/div/div[2]/div[2]/div[1]/div[2]/span'))) # wait totalnum
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        page_display = soup.find('div',class_='page-display').text
+        p_f = page_display.find('共') + 1
+        page_display = page_display[p_f:]
+        p_l = page_display.find('筆')
+        page_display = int(page_display[:p_l])
+        if page_display > 3:
+            page_display = 3
+        NT_last = []
+        print(f'{value} 在新北圖有{page_display}本')
         
-        html_num = [fm + 1 for fm in range(totalnum)]
-        print(f'{value} 北市圖有多本館藏,{html_num}')
-
-        last =[]
-        count = 0
-        for fm in range(totalnum):
-            print(f'---BOOK {fm+1}---')
-            count+=1
-            addup = []
+        hrefs = ['https://webpac.tphcc.gov.tw/webpac/' + h3.parent['href'] for h3 in soup.find_all('h3')]
+        for display in range(page_display):
             try:
-                a = driver.find_element(By.XPATH,f'/html/body/div[2]/div[4]/table/tbody/tr[{fm + count}]/td[2]/div/div[1]/a')
-                a.click()
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
+                addup = []
+                driver.get(hrefs[display])
+                WebDriverWait(driver,5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="wrap"]/div[3]/div/div[2]/div[3]/div[2]/div[2]'))) # wait detail
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
-                
-                TC_BookName = soup.find('h3').text
-                dVC = soup.find('div',id='detailViewDetailContent')
-                key = dVC.findAll('table')
-                marc = []
-                for i in key:
-                    td_name = i.findAll('td')[0].text
-                    td_content = i.findAll('td')[1].text
-                    marc.append((td_name, td_content))
-                print('---館藏資訊---')
-                addup.append(marc)
+                name = soup.find('div',{'class':'right'})
+                NT_BookName = name.h2.text.strip(space) #書名
+                addup.append(NT_BookName)
+                information = soup.find('div',{'class':'detail simple'})
+                allP = information.findAll('p')
+                paragraphs = []
+                for p in allP:
+                    p_list=[i.strip(space) for i in p.text.split(chr(32)+chr(65306)+chr(32))]
+                    paragraphs.append(tuple(p_list))
+                addup.append(paragraphs)
 
+
+                WebDriverWait(driver,5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="wrap"]/div[3]/div/div[2]/div[5]/div/table/tbody'))) #wait 館藏地點
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
-                div = soup.find('div',{'id':'integratehold'})
-                head = div.findAll('th')
-                tr = div.findAll('tr')
-                
-                positAll = []
-                for i in tr[1:]:
-                    posit = []
-                    for j in range(0,len(head)):
-                        body = i.findAll('td')
-                        table_body = body[j].text            
-                        posit.append((table_body))
-                    positAll.append(posit)
-                addup.append(positAll)
 
-                driver.back()
-                iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
-                driver.switch_to.frame(iframe)
-                print('==='*40)
+                title = soup.find('thead')
+                title_key = title.findAll('th')
+                library_key = soup.find('tbody').findAll('tr')
+                NT_positAll = []
+                for key in library_key:
+                    tds = key.find_all('td')
+                    td_list =[td.text.strip(space) for td in tds]
+                    NT_positAll.append(td_list)
+                addup.append(NT_positAll)
             except:
-                print('Finished')
+                print(hrefs[display],display)
+                print(traceback.format_exc())
             else:
-                last.append(addup)
-
+                NT_last.append(addup)
+    elif no_data_len > 0:
+        msg3 = f'新北圖沒有 {value} 的資料'
     return render(request, "Berkeley_output.html", locals())
 
 
