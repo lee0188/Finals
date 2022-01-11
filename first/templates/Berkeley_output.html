@@ -138,8 +138,8 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
                     <br/>
                     <button>加入收藏</button>
                     <div class="marc">
-                    <h3 style="font-weight:bold;">書名 : {{whole.0}}</h3>
-                    {% for marc1, marc2 in whole.1  %}
+                    <h3 style="font-weight:bold;">書名 : <a href={{whole.0}} target="_blank">{{whole.1}}</a></h3>
+                    {% for marc1, marc2 in whole.2  %}
                     <ul class="tc_marc">
                         <li>{{marc1}}{{marc2}}</li>
                     </ul>
@@ -160,7 +160,7 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
                     </thead>
                 
                     <tbody>
-                    {% for row in whole.2 %}    
+                    {% for row in whole.3 %}    
                     <tr>
                         <td>{{row.0}}</td><td>{{row.1}}</td><td>{{row.2}}</td><td>{{row.3}}</td><td>{{row.4}}</td><td>{{row.5}}</td>
                     </tr>
@@ -180,16 +180,14 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 </div>
 
 
-
-
 <div id='NT_lib' class='hide'>
 {% if no_data_len == 0  %}
     {% for NT_e in NT_last %}
     <div class="show">
         <button>加入收藏</button>
         <div class="marc">
-        <h3 style="font-weight:bold;">書名 : {{NT_e.0}}</h3>
-        {% for para1, para2 in NT_e.1 %}
+        <h3 style="font-weight:bold;">書名 : <a href={{NT_e.0}} target="_blank">{{NT_e.1}}</a></h3>
+        {% for para1, para2 in NT_e.2 %}
         <ul class="tc_marc">
             <li>{{para1}} : {{para2}}</li>
         </ul>
@@ -213,7 +211,7 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
             </tr>
             </thead>
             <tbody>
-            {% for ro in NT_e.2 %}    
+            {% for ro in NT_e.3 %}    
             <tr>
                 <td>{{ro.0}}</td><td>{{ro.1}}</td><td>{{ro.2}}</td><td>{{ro.3}}</td><td>{{ro.4}}</td><td>{{ro.5}}</td><td>{{ro.6}}</td><td>{{ro.7}}</td><td>{{ro.8}}</td><td>{{ro.9}}</td>
             </tr>

@@ -176,6 +176,7 @@ def Berkeley_output(request,value):
                 addup = []
                 try:
                     driver.get(hrefs[fm])
+                    addup.append(hrefs[fm])
                     WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
                     WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#integratehold > table > tbody')))
                     
@@ -237,6 +238,7 @@ def Berkeley_output(request,value):
             try:
                 addup = []
                 driver.get(hrefs[display])
+                addup.append(hrefs[display])
                 WebDriverWait(driver,5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="wrap"]/div[3]/div/div[2]/div[3]/div[2]/div[2]'))) # wait detail
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
                 name = soup.find('div',{'class':'right'})

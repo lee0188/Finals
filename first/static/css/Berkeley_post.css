@@ -28,7 +28,7 @@ a:hover{
   width: 1000px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: start;
 }
 button,input[type="submit"]{
