@@ -51,7 +51,9 @@ http://127.0.0.1:8000
 4. Sign in
 <img width ="637" height = "362.5" src ="https://github.com/lee0188/Readme-test/blob/main/Readme/login.png">
 5. Favorites
-<img width ="680" height = "420" src ="https://github.com/lee0188/Readme-test/blob/main/Readme/login.png">
-<img width ="518" height = "578" src ="https://github.com/lee0188/Readme-test/blob/main/Readme/login.png">
+<img width ="680" height = "420" src ="https://github.com/lee0188/Finals/blob/main/Readme/Favorites_Berkley.png">
+<img width ="518" height = "578" src ="https://github.com/lee0188/Finals/blob/main/Readme/Favorites_Library.png">
 6. Search Process
-7. Sign in Process
+<img width ="680" height = "420" src ="https://github.com/lee0188/Finals/blob/main/Readme/SerachProcess_AdobeCreativeCloudExpress.gif">
+7. Favorites in Process
+<img width ="680" height = "420" src ="https://github.com/lee0188/Finals/blob/main/Readme/FavoritesDemo_AdobeCreativeCloudExpress.gif">
