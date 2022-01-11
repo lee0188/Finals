@@ -18,4 +18,5 @@ class collection_table(models.Model):
     book_url = models.CharField(max_length=2000)
     book_Price = models.DecimalField(max_digits=12, decimal_places=3, default=0)
     book_Info = models.CharField(max_length=1000)
+    lib = models.CharField(max_length=100, default="0")
     created_on = models.DateTimeField(auto_now_add=True)

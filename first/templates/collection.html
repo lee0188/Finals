@@ -7,8 +7,13 @@
     <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
     <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
 
-<script>
+function del_fav_book(){
+    alert("此功能還在努力開發中，以後再回來看看～");
+}
+
 function menu(){
     var x = document.getElementById("berkelyBS");
     var y = document.getElementById("TC_lib");
@@ -95,11 +100,12 @@ function menu3(){
 <a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
 <a href="/">回首頁</a>
 
+
 <div id='berkelyBS'>
-{% for info in exist_records %}
+{% for info in exist_records_bkl %}
 <h3>第{{forloop.counter}}本書
 
-<button onclick='add_fav_book("{{v.name}}", "{{k}}", "{{v.price}}", "{{v.data}}", "{{v.fav}}", "{{forloop.counter}}")' id={{forloop.counter}} class="btn-round btn-light">取消收藏</button>
+<button onclick='del_fav_book()'> 取消收藏</button>
 
 
 </h3>
@@ -118,10 +124,43 @@ function menu3(){
 
 <div id='TC_lib' class='hide'>
 <!-- 台北市圖書館收藏清單 -->
+{% for info in exist_records_tp %}
+<h3>第{{forloop.counter}}本書
+
+<button onclick='del_fav_book()'> 取消收藏</button>
+
+
+</h3>
+<ul>
+    <li>書名 : <a href={{info.book_url}} target="_blank">{{info.book_Name}}</a></li>
+    <li>加入時間：{{info.created_on}}</li>
+</ul>
+
+
+{% empty %}
+<span>{{msg}}</span>
+{%endfor%}
+</div>
 </div>
 
 <div id='NT_lib' class='hide'>
 <!-- 台北市圖書館收藏清單 -->
+{% for info in exist_records_ntp %}
+<h3>第{{forloop.counter}}本書
+
+<button onclick='del_fav_book()'> 取消收藏</button>
+
+
+</h3>
+<ul>
+    <li>書名 : <a href={{info.book_url}} target="_blank">{{info.book_Name}}</a></li>
+    <li>加入時間：{{info.created_on}}</li>
+</ul>
+
+
+{% empty %}
+<span>{{msg}}</span>
+{%endfor%}
 </div>
 
 {% else %}

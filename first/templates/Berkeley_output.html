@@ -10,7 +10,89 @@
 </head>
 
 <body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+// 添加或取消收藏
+function add_fav_book_1(bookname, bookurl, bookinfo, id){
+    if (document.getElementById(id).innerHTML == "加入收藏"){
+        alert("確認加入收藏？");
+    }
+    else
+        alert("確認取消收藏？");
+    
+    const csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url:"{% url 'add_fav_ajax' %}",
+        data:{"bookname": bookname, "bookurl": bookurl, "bookinfo": bookinfo, "flag": "tp"},
+        async: true,
+        dataType: "json",
+        headers: {
+           'X-CSRFToken': csrftoken
+        },
+        success: function(data){
+            if (data['success'] == -1)
+                alert("尚未登入")
+            else if(data['success'] == -2){
+                alert("成功刪除收藏");
+                $('#' + id).show().html('加入收藏');
+            }
+            else if (data['success']){
+                alert("成功加入收藏清單");
+                $('#' + id).show().html('取消收藏');
+            }
+            else
+                alert("嘗試後失敗")
+        },
+        error : function() {
+            alert('直接失敗');
+        },
 
+    })
+}
+
+</script>
+<script type="text/javascript">
+// 添加或取消收藏
+function add_fav_book_2(bookname, bookurl, bookinfo, id){
+    if (document.getElementById(id).innerHTML == "加入收藏"){
+        alert("確認加入收藏？");
+    }
+    else
+        alert("確認取消收藏？");
+    
+    const csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url:"{% url 'add_fav_ajax' %}",
+        data:{"bookname": bookname, "bookurl": bookurl, "bookinfo": bookinfo, "flag": "ntp"},
+        async: true,
+        dataType: "json",
+        headers: {
+           'X-CSRFToken': csrftoken
+        },
+        success: function(data){
+            if (data['success'] == -1)
+                alert("尚未登入")
+            else if(data['success'] == -2){
+                alert("成功刪除收藏");
+                $('#' + id).show().html('加入收藏');
+            }
+            else if (data['success']){
+                alert("成功加入收藏清單");
+                $('#' + id).show().html('取消收藏');
+            }
+            else
+                alert("嘗試後失敗")
+        },
+        error : function() {
+            alert('直接失敗');
+        },
+
+    })
+}
+
+</script>
 <div class="container0">
     <h1 id='preloader' class='hide'>
         搜尋中，請稍後<img src="{% static '/images/loading2.gif'%}" width="50" height="50" style='float: right;'>
@@ -44,12 +126,13 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
     $.ajax({
         type: "POST",
         url:"{% url 'add_fav_ajax' %}",
-        data:{"bookname": bookname, "bookurl": bookurl,"bookprice": bookprice, "bookinfo": bookinfo},
+        data:{"bookname": bookname, "bookurl": bookurl,"bookprice": bookprice, "bookinfo": bookinfo, "flag": "bkl"},
         async: true,
         dataType: "json",
         headers: {
            'X-CSRFToken': csrftoken
         },
+
         success: function(data){
             if (data['success'] == -1)
                 alert("尚未登入")
@@ -97,7 +180,10 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 {% if len_detail > 0 %}   
 <div class="show">
     <br/>
-    <button>加入收藏</button>
+
+<button onclick='add_fav_book_1("{{TC_BookName}}", "https://www.books.com.tw/", "{{marc}}", "199")' id='199' class="btn-round btn-light">{{tp1_fav}}</button>
+
+
     <div class="marc">
     <h3 style="font-weight:bold;">書名 : {{TC_BookName}}</h3>
     {% for marc1, marc2 in marc  %}
@@ -136,7 +222,12 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
         {% for whole in last %}
             <div class="show">
                     <br/>
-                    <button>加入收藏</button>
+                
+
+                    <button onclick='add_fav_book_1("{{whole.1}}", "{{whole.0}}", "{{whole.2}}", "{{whole.4}}")' id='{{whole.4}}' class="btn-round btn-light">{{whole.5}}</button>
+
+
+
                     <div class="marc">
                     <h3 style="font-weight:bold;">書名 : <a href={{whole.0}} target="_blank">{{whole.1}}</a></h3>
                     {% for marc1, marc2 in whole.2  %}
@@ -171,7 +262,7 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
                     </div>
             </div>
         {% empty %}
-        {% endfor %}  
+        {% endfor %}
     {% elif totalnum == 0 %}
             <div class="ber">{{msg2}}</div>
     {% endif %}
@@ -179,12 +270,14 @@ function add_fav_book(bookname, bookurl, bookprice, bookinfo, fav, id){
 {% endif %}
 </div>
 
-
+<!-- 新北市 -->
 <div id='NT_lib' class='hide'>
 {% if no_data_len == 0  %}
     {% for NT_e in NT_last %}
     <div class="show">
-        <button>加入收藏</button>
+        
+        <button onclick='add_fav_book_2("{{NT_e.1}}", "{{NT_e.0}}", "{{NT_e.2}}", "{{NT_e.4}}")' id='{{NT_e.4}}' class="btn-round btn-light">{{NT_e.5}}</button>
+
         <div class="marc">
         <h3 style="font-weight:bold;">書名 : <a href={{NT_e.0}} target="_blank">{{NT_e.1}}</a></h3>
         {% for para1, para2 in NT_e.2 %}

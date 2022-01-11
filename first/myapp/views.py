@@ -117,7 +117,7 @@ def Berkeley_output(request,value):
     berkely_bs = dict(list(berkely_bs.items())[:6]) #選前6本書即可
     if request.user.is_authenticated:
         for href in berkely_bs:
-            exist_records = collection_table.objects.filter(uName=request.user, book_url=href, book_Name=berkely_bs[href]['name'], book_Price=int(berkely_bs[href]['price']))
+            exist_records = collection_table.objects.filter(uName=request.user, book_url=href, book_Name=berkely_bs[href]['name'], book_Price=int(berkely_bs[href]['price']), lib="0")
             if exist_records:
                 berkely_bs[href]['fav'] = "取消收藏"
             else:
@@ -132,10 +132,11 @@ def Berkeley_output(request,value):
     keyword = driver.find_element(By.CSS_SELECTOR,'#search_inputS')
     keyword.send_keys(value)
     keyword.submit()
-    time.sleep(2)
+    time.sleep(3)
     soup = BeautifulSoup(driver.page_source,'html.parser')
     dVC = soup.find_all('div',id='detailViewDetailContent')
     len_detail = len(dVC)
+    tptp = "tptp"
     if len_detail != 0:
         print(f'{value} 北市圖只有一本館藏')
         WebDriverWait(driver,5).until(EC.presence_of_element_located((By.CSS_SELECTOR,'#detailViewDetailContent > table:nth-child(1)')))
@@ -160,6 +161,14 @@ def Berkeley_output(request,value):
                 table_body = body[j].text            
                 posit.append((table_body))
             positAll.append(posit)
+
+        tp1_fav = "加入收藏"
+        if request.user.is_authenticated:
+            exist_records_tp1 = collection_table.objects.filter(uName=request.user, book_Name=TC_BookName, lib="1", book_Info=marc)
+            if exist_records_tp1:
+                tp1_fav = "取消收藏"
+        
+
     else:
         iframe = driver.find_elements(By.TAG_NAME,"iframe")[0]
         driver.switch_to.frame(iframe)
@@ -211,8 +220,23 @@ def Berkeley_output(request,value):
                     print(traceback.format_exc())
                 else:
                     last.append(addup)
+            if request.user.is_authenticated:
+                for i in range(len(last)):
+                    exist_records_tp2 = collection_table.objects.filter(uName=request.user, book_Name=last[i][1], lib="1", book_Info=last[i][2])
+                    print(exist_records_tp2)
+                    if exist_records_tp2:
+                        
+                        last[i].append((i+1)*1000)
+                        last[i].append("取消收藏")
+                    else:
+                        
+                        last[i].append((i+1)*1000)
+                        last[i].append("加入收藏")
         elif totalnum == 0:
             msg2 = f'北市圖沒有 {value} 的資料'
+
+
+        
 
 
     #新北市立圖書館
@@ -270,8 +294,21 @@ def Berkeley_output(request,value):
                 print(traceback.format_exc())
             else:
                 NT_last.append(addup)
+        if request.user.is_authenticated:
+
+            for i in range(len(NT_last)):
+                exist_records_ntp = collection_table.objects.filter(uName=request.user, book_Name=NT_last[i][1], lib="1", book_url=NT_last[i][0])
+                
+                if exist_records_ntp:
+                    NT_last[i].append((i+1)*10000)
+                    NT_last[i].append("取消收藏")
+                else:
+                    NT_last[i].append((i+1)*10000)
+                    NT_last[i].append("加入收藏")
     elif no_data_len > 0:
         msg3 = f'新北圖沒有 {value} 的資料'
+
+    
     return render(request, "Berkeley_output.html", locals())
 
 
@@ -343,47 +380,122 @@ def log_out(request):
     return redirect('/') #重新導向到登入畫面
 
 def collection(request):
-    exist_records = collection_table.objects.filter(uName=request.user)
-    for i in exist_records:
-        print(i)
-        print(i.book_Name)
-    print(type(exist_records))
+    exist_records_bkl = collection_table.objects.filter(uName=request.user, lib="0")
+
+    exist_records_tp = collection_table.objects.filter(uName=request.user, lib="1")
+
+    exist_records_ntp = collection_table.objects.filter(uName=request.user, lib="2")
     return render(request, 'collection.html', locals())
 
 def add_fav_ajax(request):
     data = {'success': False}
+
     if request.method=='POST':
-        bookname = request.POST.get("bookname")
-        bookurl = request.POST.get("bookurl")
-        bookprice = request.POST.get("bookprice", 0)
-        bookinfo = request.POST.get("bookinfo")
-        
+        # 博客來
+        if request.POST.get("flag") == "bkl":
+            bookname = request.POST.get("bookname")
+            bookurl = request.POST.get("bookurl")
+            bookprice = request.POST.get("bookprice", 0)
+            bookinfo = request.POST.get("bookinfo")
+            
 
-        if not request.user.is_authenticated:
-            data['success'] = -1
-            return JsonResponse(data)
+            if not request.user.is_authenticated:
+                data['success'] = -1
+                return JsonResponse(data)
 
-        exist_records = collection_table.objects.filter(uName=request.user, book_url=bookurl, book_Name=bookname, book_Price=bookprice)
-        
-        if exist_records:
-            exist_records.delete()
-            data['success'] = -2
+            exist_records = collection_table.objects.filter(uName=request.user, book_url=bookurl, book_Name=bookname, book_Price=bookprice)
+            
+            if exist_records:
+                exist_records.delete()
+                data['success'] = -2
 
-        else:
-            datas = {'uName': request.user, 'book_url': bookurl, 
-                'book_Name': bookname, 'book_Price': int(bookprice), 'book_Info': bookinfo}
-            form = collection_tableModelForm(datas)
-            form.uName = request.user
-            form.book_url = bookurl
-            form.book_Name = bookname
-            form.book_Price = int(bookprice)
-            form.book_Info = bookinfo
-            if form.is_valid():
-                form.save()
-                data['success'] = True
             else:
-                print(form.errors)
-                print("表單錯誤")
+                datas = {'uName': request.user, 'book_url': bookurl, 
+                    'book_Name': bookname, 'book_Price': int(bookprice), 'book_Info': bookinfo, 'lib': "0"}
+                form = collection_tableModelForm(datas)
+                form.uName = request.user
+                form.book_url = bookurl
+                form.book_Name = bookname
+                form.book_Price = int(bookprice)
+                form.book_Info = bookinfo
+                if form.is_valid():
+                    form.save()
+                    data['success'] = True
+                else:
+                    print(form.errors)
+                    print("表單錯誤")
+        # 台北市
+        elif request.POST.get("flag") == "tp":
+            bookname = request.POST.get("bookname")
+            bookurl = request.POST.get("bookurl")
+            bookinfo = request.POST.get("bookinfo")
+            
+
+
+            if not request.user.is_authenticated:
+                data['success'] = -1
+                return JsonResponse(data)
+
+            exist_records = collection_table.objects.filter(uName=request.user, book_Info=bookinfo, book_Name=bookname, lib="1")
+
+            if exist_records:
+                exist_records.delete()
+                data['success'] = -2
+
+            else:
+                datas = {'uName': request.user, 'book_url': bookurl, 
+                    'book_Name': bookname, 'book_Price': 0, 'book_Info': bookinfo, 'lib': "1"}
+                form = collection_tableModelForm(datas)
+                form.uName = request.user
+                form.book_url = bookurl
+                form.book_Name = bookname
+                form.book_Price = 0
+                form.book_Info = bookinfo
+                form.lib = "1"
+                if form.is_valid():
+                    form.save()
+                    data['success'] = True
+                else:
+                    print(form.errors)
+                    print("表單錯誤")
+
+
+        # 新北市
+        elif request.POST.get("flag") == "ntp":
+            bookname = request.POST.get("bookname")
+            bookurl = request.POST.get("bookurl")
+            bookinfo = request.POST.get("bookinfo")
+            print("bookinfo",bookinfo)
+            print("type(bookinfo)", type(bookinfo))
+
+
+            if not request.user.is_authenticated:
+                data['success'] = -1
+                return JsonResponse(data)
+
+            exist_records = collection_table.objects.filter(uName=request.user, book_url=bookurl, book_Name=bookname, lib="2")
+
+            if exist_records:
+                exist_records.delete()
+                data['success'] = -2
+
+            else:
+                datas = {'uName': request.user, 'book_url': bookurl, 
+                    'book_Name': bookname, 'book_Price': 0, 'book_Info': bookinfo, 'lib': "2"}
+                form = collection_tableModelForm(datas)
+                form.uName = request.user
+                form.book_url = bookurl
+                form.book_Name = bookname
+                form.book_Price = 0
+                form.book_Info = bookinfo
+                form.lib = "2"
+                if form.is_valid():
+                    form.save()
+                    data['success'] = True
+                else:
+                    print(form.errors)
+                    print("表單錯誤")
+
     return JsonResponse(data)
 
 
