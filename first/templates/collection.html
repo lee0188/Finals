@@ -5,86 +5,13 @@
 <head>
     <title>就是書要你 收藏清單</title>
     <link rel="shortcut icon" type="image/jpg" href="{% static '/images/favicons.jpg' %}">
-    <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
+    <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_output.css"%}'>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
-
 function del_fav_book(){
     alert("此功能還在努力開發中，以後再回來看看～");
 }
-
-function menu(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib");
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-    if(x.style.display === 'none'){
-        x.style.display = "block";
-        y.style.display = 'none';
-        z.style.display = 'none'
-    }
-    else{
-        y.style.display = 'none';
-        z.style.display = 'none'
-    }
-
-    btn1.classList.add('click')
-    btn2.classList.remove('click')
-    btn3.classList.remove('click')
-}
-
-function menu2(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib");
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-
-    y.classList.toggle("hide");
-    if(y.style.display === 'none'){
-        y.style.display = "block";
-        x.style.display = 'none';
-        z.style.display = 'none'
-    }
-    else{
-        x.style.display = 'none';
-        z.style.display = 'none'
-    }
-
-    btn1.classList.remove('click')
-    btn2.classList.add('click')
-    btn3.classList.remove('click')
-
-}
-
-function menu3(){
-    var x = document.getElementById("berkelyBS");
-    var y = document.getElementById("TC_lib");
-    var z = document.getElementById("NT_lib"); 
-    var btn1 = document.getElementById("btn1")
-    var btn2 = document.getElementById("btn2")
-    var btn3 = document.getElementById("btn3")
-
-    z.classList.toggle("hide");  
-    if(z.style.display === 'none'){
-        z.style.display = "block";
-        x.style.display = 'none';
-        y.style.display = 'none';
-    }
-    else{
-        x.style.display = 'none';
-        y.style.display = 'none'
-    }
-
-    btn1.classList.remove('click')
-    btn2.classList.remove('click')
-    btn3.classList.add('click')
-}
-
 </script>
 
 
@@ -92,16 +19,19 @@ function menu3(){
 
 <body>
 {% if request.user.is_authenticated %}
-<div>
-<button onclick="menu()" id="btn1" class="btn">{{request.user}}博客來收藏清單</button>
-<button onclick="menu2()" id="btn2" class='btn'>{{request.user}}北市圖書館收藏清單</button>
-<button onclick="menu3()" id="btn3" class='btn'>{{request.user}}新北圖書館收藏清單</button>
+<div class="section1">
+<button onclick="menu()" id="btn1" class="btn">{{request.user}}收藏清單 博客來</button>
+<button onclick="menu2()" id="btn2" class='btn'>{{request.user}}收藏清單 北市圖書館</button>
+<button onclick="menu3()" id="btn3" class='btn'>{{request.user}}收藏清單 新北圖書館</button>
 </div>
-<a class="btn btn-lg btn-primary" href="/logout" role="button">登出</a>
-<a href="/">回首頁</a>
+
+<div style="text-align: right; margin-right: 40px;"><a href="/logout" style="font-weight:normal; font-size: 20px;" >登出</a></div>
+<br/>
+<div style="text-align: right; margin-right: 40px;"><a href="/" style="font-weight:normal; font-size: 20px;">回首頁</a></div>
 
 
 <div id='berkelyBS'>
+<div class="ber">
 {% for info in exist_records_bkl %}
 <h3>第{{forloop.counter}}本書
 
@@ -121,15 +51,15 @@ function menu3(){
 <span>{{msg}}</span>
 {%endfor%}
 </div>
+</div>
 
 <div id='TC_lib' class='hide'>
+<div class="ber">
 <!-- 台北市圖書館收藏清單 -->
 {% for info in exist_records_tp %}
 <h3>第{{forloop.counter}}本書
 
 <button onclick='del_fav_book()'> 取消收藏</button>
-
-
 </h3>
 <ul>
     <li>書名 : <a href={{info.book_url}} target="_blank">{{info.book_Name}}</a></li>
@@ -144,7 +74,8 @@ function menu3(){
 </div>
 
 <div id='NT_lib' class='hide'>
-<!-- 台北市圖書館收藏清單 -->
+<div class="ber">
+<!-- 新北市圖書館收藏清單 -->
 {% for info in exist_records_ntp %}
 <h3>第{{forloop.counter}}本書
 
@@ -162,11 +93,14 @@ function menu3(){
 <span>{{msg}}</span>
 {%endfor%}
 </div>
+</div>
 
 {% else %}
-    <p>登入後可將書加入收藏清單<a href="/login/" style="margin-left:10px;">登入</a></p>
-    <p>尚未有帳號<a href="/register" style="margin-left:10px;">註冊</a></p>
+    <link rel='stylesheet' type='text/css' href='{% static "/css/Berkeley_post.css"%}'>
+    <p>登入後可將書加入收藏清單<a href="/login/" style="margin-left:10px; font-weight: normal;">登入</a></p>
+    <p>尚未有帳號<a href="/register" style="margin-left:10px; font-weight: normal;">註冊</a></p>
 {% endif %}
 
+<script src="{% static '/css/Berkeley_output.js' %}"></script>
 </body>
 </html>
