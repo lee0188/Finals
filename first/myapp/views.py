@@ -232,6 +232,10 @@ def Berkeley_output(request,value):
                         
                         last[i].append((i+1)*1000)
                         last[i].append("加入收藏")
+            else:
+                for i in range(len(last)):
+                    last[i].append((i+1)*500)
+                    last[i].append("加入收藏")
         elif totalnum == 0:
             msg2 = f'北市圖沒有 {value} 的資料'
 
@@ -297,7 +301,7 @@ def Berkeley_output(request,value):
         if request.user.is_authenticated:
 
             for i in range(len(NT_last)):
-                exist_records_ntp = collection_table.objects.filter(uName=request.user, book_Name=NT_last[i][1], lib="1", book_url=NT_last[i][0])
+                exist_records_ntp = collection_table.objects.filter(uName=request.user, book_Name=NT_last[i][1], lib="2", book_url=NT_last[i][0])
                 
                 if exist_records_ntp:
                     NT_last[i].append((i+1)*10000)
@@ -305,6 +309,10 @@ def Berkeley_output(request,value):
                 else:
                     NT_last[i].append((i+1)*10000)
                     NT_last[i].append("加入收藏")
+        else:
+            for i in range(len(NT_last)):
+                NT_last[i].append((i+1)*50)
+                NT_last[i].append("加入收藏")
     elif no_data_len > 0:
         msg3 = f'新北圖沒有 {value} 的資料'
 
