@@ -15,6 +15,13 @@ Link :
 * Back-End(Django)
 * SQL Database(MySQL)
 
+```bash
+pip3 install selenium
+pip3 install beautifulsoup4
+pip3 install requests
+sudo pip3 install pymysql
+```
+ChromeDriver Link: https://chromedriver.chromium.org/downloads
 ## Installation
 
 Use the git clone
